@@ -1,0 +1,142 @@
+﻿<div class="jumbotron">
+    <h1>Arapahoe County Sales</h1>
+</div>
+<div id="salesGrid" >
+
+</div>
+<div class="jumbotron">
+    <h1>Arapahoe County Salespeople</h1>
+</div>
+<div id="personGrid">
+
+</div>
+
+
+@section scripts {
+    <script>
+
+    $(function () {       
+        $("#salesGrid").dxDataGrid({
+            dataSource: {
+                store: {
+                    type: "odata",
+                    url: "https://js.devexpress.com/Demos/SalesViewer/odata/DaySaleDtoes",
+                    beforeSend: function (request) {
+                        request.params.startDate = "2018-05-10";
+                        request.params.endDate = "2018-05-15";
+                    }
+                }
+            },
+            columns: [
+                {
+                    dataField: "Product",
+                },
+                {
+                    dataField: "Channel",
+                    caption: "Channel",
+                    groupIndex: 0,
+                    //dataType: "number",
+                    //format: "currency",
+                    //alignment: "right",
+                },
+                {
+                    dataField: "Amount",
+                    caption: "Sale Amount",
+                    dataType: "number",
+                    format: "currency",
+                    alignment: "right",
+                },
+                {
+                    dataField: "Discount",
+                    caption: "Discount %",
+                    dataType: "number",
+                    format: "percent",
+                    alignment: "right",
+                    allowGrouping: false,
+                    cellTemplate: discountCellTemplate,
+                    cssClass: "bullet"
+                },
+                {
+                    dataField: "SaleDate",
+                    dataType: "date"
+                },
+                {
+                    dataField: "Region",
+                    dataType: "string"
+                },
+                {
+                    dataField: "Sector",
+                    dataType: "string",
+                },
+                {
+                    dataField: "Customer",
+                    //groupIndex: 0,
+                    dataType: "string",
+                    width: 150
+                }
+            ],
+        });
+
+        $("#personGrid").dxDataGrid({
+            dataSource: {
+                store: {
+                    type: "odata",
+                    url: "https://localhost:44362/api/values/getpersons",
+                }
+            },
+            columns: [
+                {
+                    dataField: "FirstName",
+                    caption: "First Name",
+                },
+                {
+                    dataField: "LastName",
+                    caption: "Last Name",
+                },
+                {
+                    dataField: "Specialty",
+                    caption: "Specialty",
+                },
+                {
+                    dataField: "FavoriteColor",
+                    caption: "Favorite Color",
+                },
+            ],
+        });
+
+
+    });
+        var discountCellTemplate = function (container, options) {
+            $("<div/>").dxBullet({
+                onIncidentOccurred: null,
+                size: {
+                    width: 100,
+                    height: 35
+                },
+                margin: {
+                    top: 5,
+                    bottom: 0,
+                    left: 5
+                },
+                showTarget: false,
+                showZeroLevel: true,
+                value: options.value * 100,
+                startScaleValue: 0,
+                endScaleValue: 100,
+                tooltip: {
+                    enabled: true,
+                    font: {
+                        size: 18
+                    },
+                    paddingTopBottom: 2,
+                    customizeTooltip: function () {
+                        return { text: options.text };
+                    },
+                    zIndex: 5
+                }
+            }).appendTo(container);
+        };
+
+    </script>
+
+}
